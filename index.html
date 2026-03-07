@@ -1,10 +1,370 @@
 <!DOCTYPE html>
-<html lang="lv">
+<html lang="lv" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <title>Pirmais projekts</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ozolu Rukši - Svaiga cūkgaļa tieši no saimniecības</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .farm-green { color: #2d4a22; }
+        .bg-farm-green { background-color: #2d4a22; }
+        .bg-cream { background-color: #fcfaf7; }
+        
+        /* Nobīde navigācijai */
+        section {
+            scroll-margin-top: 80px;
+        }
+
+        /* Uzlabots attēlu konteiners ar labāku proporciju */
+        .img-container {
+            background-color: #f3f4f6;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            aspect-ratio: 4 / 3; /* Dabiska foto proporcija, kas mazāk apgriež malas */
+            width: 100%;
+        }
+        
+        .img-container::before {
+            content: '🥩';
+            font-size: 2.5rem;
+            opacity: 0.15;
+            position: absolute;
+            z-index: 1;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center; /* Nodrošina, ka gaļas gabals ir centrā */
+            position: relative;
+            z-index: 10;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .product-card:hover .img-container img {
+            transform: scale(1.08);
+        }
+
+        /* Mobilā fiksētā poga */
+        .sticky-cta {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            z-index: 50;
+        }
+
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Modālais logs */
+        #contactModal {
+            display: none;
+            backdrop-filter: blur(4px);
+        }
+        #contactModal.active {
+            display: flex;
+        }
+    </style>
 </head>
-<body>
-  <h1>Sveiks, pasaule!</h1>
+<body class="bg-cream text-gray-800">
+
+    <!-- Navigācija -->
+    <header class="bg-white/95 backdrop-blur-md border-b border-gray-100 py-4 px-6 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex flex-col">
+                <div class="text-xl md:text-2xl font-bold farm-green tracking-tight uppercase leading-none">
+                    Ozolu Rukši
+                </div>
+                <div class="text-sm md:text-base font-bold text-farm-green tracking-tighter mt-1">
+                    22 44 44 24 | 22 03 38 81
+                </div>
+            </div>
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-bold uppercase tracking-widest">
+                <a href="#piedavajums" class="text-gray-600 hover:text-green-900 transition">Piedāvājums</a>
+                <a href="#par-mums" class="text-gray-600 hover:text-green-900 transition">Par mums</a>
+                <button onclick="openContactModal()" class="bg-farm-green text-white px-6 py-2.5 rounded-full hover:bg-green-900 transition flex items-center shadow-md">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 004.87 4.87l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-1C7.22 18 2 12.78 2 6V3z"></path></svg>
+                    Sazināties
+                </button>
+            </nav>
+            <button onclick="openContactModal()" class="md:hidden farm-green p-2 bg-green-50 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l2.28-2.28a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-gray-900">
+        <div class="absolute inset-0 z-0">
+            <img src="https://ik.imagekit.io/reiniszarins/ChatGPT%20Image%20Mar%206,%202026,%2005_56_10%20PM.png" 
+                 alt="Saimniecības fons" 
+                 class="w-full h-full object-cover opacity-50">
+        </div>
+        <div class="relative z-10 text-center px-6 max-w-5xl">
+            <span class="inline-block bg-white/10 backdrop-blur-md text-white px-4 py-1 rounded-full text-sm font-semibold mb-6 tracking-widest uppercase border border-white/20">Svaigums no saimnieka</span>
+            <h1 class="text-4xl md:text-7xl text-white mb-6 leading-[1.1] drop-shadow-2xl">
+                Īsta cūkgaļa tieši no Latvijas saimniecības
+            </h1>
+            <p class="text-lg md:text-2xl text-gray-100 mb-10 font-light max-w-2xl mx-auto">
+                No kūts līdz Jūsu virtuvei. Dabīga garša, godīgs svars un izdevīga zemnieka cena.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#piedavajums" class="bg-white text-gray-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition shadow-2xl">
+                    Skatīt piedāvājumu
+                </a>
+                <button onclick="openContactModal()" class="bg-[#25D366] text-white px-10 py-4 rounded-xl font-bold text-lg hover:opacity-95 transition flex items-center justify-center shadow-2xl">
+                    <svg class="w-6 h-6 mr-3 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    WhatsApp
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Piedāvājuma katalogs -->
+    <section id="piedavajums" class="py-24 px-6 bg-cream">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl farm-green mb-4 font-bold uppercase tracking-tight">Piedāvājums</h2>
+                <div class="w-20 h-1 bg-farm-green mx-auto mb-6 rounded-full"></div>
+                
+                <div class="bg-white/50 p-6 rounded-3xl border border-farm-green/10 max-w-3xl mx-auto shadow-sm">
+                    <p class="text-gray-700 text-lg leading-relaxed">
+                        Mūsu standarta piedāvājums ir cūkas <span class="font-bold">ceturtdaļas</span>. 
+                        Taču pēc Jūsu pieprasījuma piedāvājam arī <span class="text-farm-green font-bold underline decoration-2 underline-offset-4">detalizētu sadali pa pozīcijām</span>.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Vienāda izmēra bloku režģis -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+                <!-- Vesela cūka -->
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden product-card relative">
+                    <div class="absolute top-4 right-4 z-20">
+                        <span class="bg-farm-green/90 backdrop-blur-md text-white text-[10px] md:text-xs font-bold px-3 py-2 rounded-full shadow-lg border border-white/30 tracking-wider">22444424 | 22033881</span>
+                    </div>
+                    <div class="img-container">
+                        <img src="https://ik.imagekit.io/reiniszarins/ChatGPT%20Image%20Mar%206,%202026,%2005_50_56%20PM.png" alt="Vesela cūka">
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow text-center">
+                        <h3 class="text-2xl font-bold mb-2">Vesela cūka</h3>
+                        <p class="text-xs font-bold text-gray-400 mb-4 uppercase tracking-widest">Svars: ~75-85 kg</p>
+                        <p class="text-gray-600 mb-8 text-sm leading-relaxed italic flex-grow">
+                            <b>Viss saimnieka labums:</b> divas priekšas un divas aizmugures. Visizdevīgākā cena un krājums ilgam laikam.
+                        </p>
+                        <button onclick="openContactModal()" class="w-full bg-farm-green text-white font-bold py-3.5 rounded-xl hover:bg-green-900 transition shadow-md uppercase text-sm mt-auto">Pasūtīt</button>
+                    </div>
+                </div>
+
+                <!-- Puscūka -->
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden product-card relative">
+                    <div class="absolute top-4 right-4 z-20">
+                        <span class="bg-farm-green/90 backdrop-blur-md text-white text-[10px] md:text-xs font-bold px-3 py-2 rounded-full shadow-lg border border-white/30 tracking-wider">22444424 | 22033881</span>
+                    </div>
+                    <div class="img-container">
+                        <img src="https://ik.imagekit.io/reiniszarins/ChatGPT%20Image%20Mar%206,%202026,%2006_01_13%20PM.png" alt="Puscūka">
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow text-center">
+                        <h3 class="text-2xl font-bold mb-2">Puscūka</h3>
+                        <p class="text-xs font-bold text-gray-400 mb-4 uppercase tracking-widest">Svars: ~38-42 kg</p>
+                        <p class="text-gray-600 mb-8 text-sm leading-relaxed italic flex-grow">
+                            Sastāv no vienas priekšas un vienas aizmugures. Pieprasītākā izvēle vidējai ģimenei.
+                        </p>
+                        <button onclick="openContactModal()" class="w-full bg-farm-green text-white font-bold py-3.5 rounded-xl hover:bg-green-900 transition shadow-md uppercase text-sm mt-auto">Pasūtīt pusi</button>
+                    </div>
+                </div>
+
+                <!-- Ceturtdaļa -->
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden product-card relative">
+                    <div class="absolute top-4 right-4 z-20">
+                        <span class="bg-farm-green/90 backdrop-blur-md text-white text-[10px] md:text-xs font-bold px-3 py-2 rounded-full shadow-lg border border-white/30 tracking-wider">22444424 | 22033881</span>
+                    </div>
+                    <div class="img-container">
+                        <img src="https://ik.imagekit.io/reiniszarins/ChatGPT%20Image%20Mar%206,%202026,%2006_35_27%20PM.png?updatedAt=1772814949967" alt="Ceturtdaļa">
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow text-center">
+                        <h3 class="text-2xl font-bold mb-2">Ceturtdaļa</h3>
+                        <p class="text-xs font-bold text-gray-400 mb-4 uppercase tracking-widest">Svars: ~18-22 kg</p>
+                        <p class="text-gray-600 mb-8 text-sm leading-relaxed italic flex-grow">
+                            Mūsu pamata piedāvājums – priekšējā vai aizmugurējā daļa pēc Jūsu izvēles.
+                        </p>
+                        <button onclick="openContactModal()" class="w-full bg-farm-green text-white font-bold py-3.5 rounded-xl hover:bg-green-900 transition shadow-md uppercase text-sm mt-auto">Pasūtīt ceturtdaļu</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Papildu piedāvājums -->
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="bg-green-50 rounded-3xl p-8 border border-green-200 flex flex-col md:flex-row items-center gap-8 product-card shadow-sm">
+                    <div class="w-24 h-24 bg-white rounded-2xl flex-shrink-0 flex items-center justify-center shadow-sm border border-green-100 text-5xl">🐄</div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h3 class="text-xl font-bold farm-green uppercase tracking-tight">BIO Liellops</h3>
+                            <span class="bg-green-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase">Sezonāli</span>
+                        </div>
+                        <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                            Piedāvājam bioloģiski audzētu liellopa gaļu. Dzīvnieki baroti tikai ar dabisku barību.
+                        </p>
+                        <button onclick="openContactModal()" class="inline-flex items-center text-farm-green font-bold text-sm hover:underline uppercase tracking-widest">
+                            Uzzināt vairāk 
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl p-8 border border-gray-100 flex flex-col md:flex-row items-center gap-8 product-card shadow-sm">
+                    <div class="w-24 h-24 bg-cream rounded-2xl flex-shrink-0 flex items-center justify-center shadow-sm text-5xl">📦</div>
+                    <div>
+                        <h3 class="text-xl font-bold farm-green uppercase tracking-tight mb-2">Subproduktu komplekts</h3>
+                        <p class="text-gray-500 text-xs font-bold uppercase mb-3 tracking-wider">Komplektā ietilpst kājas, galva, aknas, nieres u.c.</p>
+                        <button onclick="openContactModal()" class="bg-farm-green text-white px-6 py-2 rounded-xl text-xs font-bold hover:bg-green-900 transition inline-block uppercase tracking-widest">Pieteikties</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Par mums -->
+    <section id="par-mums" class="py-24 px-6 bg-white overflow-hidden">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="relative">
+                <div class="aspect-video lg:aspect-square bg-gray-100 rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100">
+                    <img src="https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1000&q=80" alt="Saimniecības dzīve" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute -bottom-6 -right-6 bg-farm-green p-8 rounded-[2rem] text-white shadow-2xl hidden md:block border-4 border-white">
+                    <p class="text-4xl font-bold">100%</p>
+                    <p class="text-[10px] font-bold uppercase tracking-widest mt-1 opacity-80 leading-none text-center">Vietējais</p>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-4xl md:text-5xl farm-green mb-8 font-bold leading-tight uppercase">Par Ozolu Rukšiem</h2>
+                <div class="space-y-6 text-gray-700 leading-relaxed text-lg">
+                    <p>Mēs esam Latvijas zemnieki, kas tic dabīgam produktam. Mūsu rukši aug saņemot tikai pašu audzētus graudus un dārzeņus.</p>
+                    <p>Mēs piedāvājam gaļu, kas nonāk pie Jums maksimāli svaiga – bez konservantiem vai industriālas apstrādes. Katrs pasūtījums tiek sagatavots tieši pirms piegādes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Saziņa -->
+    <section class="py-24 px-6 bg-farm-green text-white text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto relative z-10">
+            <h2 class="text-4xl md:text-6xl mb-8 leading-tight font-bold italic text-balance uppercase">Pasūtījumiem un jautājumiem</h2>
+            <div class="inline-block bg-white p-10 md:p-14 rounded-[3rem] shadow-2xl hover:scale-105 transition-transform duration-300">
+                <p class="text-gray-400 uppercase tracking-widest text-sm font-bold mb-4">Saimnieku telefona numuri</p>
+                <div class="flex flex-col gap-2">
+                    <button onclick="openContactModal()" class="text-4xl md:text-7xl font-black farm-green hover:opacity-80 transition-opacity tracking-tighter">
+                        22 44 44 24
+                    </button>
+                    <button onclick="openContactModal()" class="text-4xl md:text-7xl font-black farm-green hover:opacity-80 transition-opacity tracking-tighter">
+                        22 03 38 81
+                    </button>
+                </div>
+                <div class="mt-8 flex justify-center gap-4">
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-lg text-xs font-bold uppercase">Zvani</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-lg text-xs font-bold uppercase">SMS</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-lg text-xs font-bold uppercase">WhatsApp</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kājene -->
+    <footer class="py-12 px-6 bg-white border-t border-gray-100 text-center opacity-60">
+        <div class="text-xl font-bold farm-green mb-2 uppercase tracking-tighter">Ozolu Rukši</div>
+        <p class="text-xs text-gray-500 font-semibold uppercase tracking-widest italic">© 2024 • Dabīga cūkgaļa un liellops no Latvijas laukiem</p>
+    </footer>
+
+    <!-- Mobilā ātrā poga -->
+    <div class="md:hidden sticky-cta">
+        <button onclick="openContactModal()" class="w-full bg-farm-green text-white text-center py-4 rounded-2xl font-bold shadow-2xl flex items-center justify-center text-sm">
+            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+            Sazināties (22444424 / 22033881)
+        </button>
+    </div>
+
+    <!-- Saziņas Modālais Logs -->
+    <div id="contactModal" class="fixed inset-0 z-[100] items-center justify-center p-6 bg-black/60" onclick="if(event.target === this) closeContactModal()">
+        <div class="bg-white w-full max-w-lg rounded-[2.5rem] overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300 max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold farm-green uppercase tracking-tight">Saziņa ar mums</h3>
+                        <p class="text-gray-500 text-sm italic">Izvēlieties ērtāko veidu</p>
+                    </div>
+                    <button onclick="closeContactModal()" class="p-2 hover:bg-gray-100 rounded-full transition">
+                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Pirmais numurs -->
+                    <div class="space-y-3">
+                        <p class="text-xs font-bold text-farm-green uppercase tracking-widest border-b pb-2">Numurs: 22 44 44 24</p>
+                        <a href="tel:+37122444424" class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-green-50 transition border border-transparent hover:border-green-100">
+                            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-farm-green"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg></div>
+                            <span class="font-bold text-sm text-gray-800">Zvanīt</span>
+                        </a>
+                        <a href="sms:+37122444424" class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-blue-50 transition border border-transparent hover:border-blue-100">
+                            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-blue-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div>
+                            <span class="font-bold text-sm text-gray-800">Sūtīt SMS</span>
+                        </a>
+                        <a href="https://wa.me/37122444424" class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-[#E7F8EE] transition border border-transparent hover:border-[#25D366]/20">
+                            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-[#25D366]"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+                            <span class="font-bold text-sm text-gray-800">WhatsApp</span>
+                        </a>
+                    </div>
+
+                    <!-- Otrais numurs -->
+                    <div class="space-y-3">
+                        <p class="text-xs font-bold text-farm-green uppercase tracking-widest border-b pb-2">Numurs: 22 03 38 81</p>
+                        <a href="tel:+37122033881" class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-green-50 transition border border-transparent hover:border-green-100">
+                            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-farm-green"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg></div>
+                            <span class="font-bold text-sm text-gray-800">Zvanīt</span>
+                        </a>
+                        <a href="sms:+37122033881" class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-blue-50 transition border border-transparent hover:border-blue-100">
+                            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-blue-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div>
+                            <span class="font-bold text-sm text-gray-800">Sūtīt SMS</span>
+                        </a>
+                        <a href="https://wa.me/37122033881" class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-[#E7F8EE] transition border border-transparent hover:border-[#25D366]/20">
+                            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm text-[#25D366]"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+                            <span class="font-bold text-sm text-gray-800">WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <p class="mt-8 text-[10px] text-gray-400 uppercase tracking-widest font-bold italic text-center">
+                    Saimniecība Ozolu Rukši
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('contactModal');
+        function openContactModal() { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeContactModal() { modal.classList.remove('active'); document.body.style.overflow = 'auto'; }
+    </script>
 </body>
 </html>
