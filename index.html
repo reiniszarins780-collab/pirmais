@@ -94,6 +94,13 @@
         #contactModal.active {
             display: flex;
         }
+
+        /* Atkāpe apakšā mobilajās ierīcēs, lai poga neaizsegtu info */
+        @media (max-width: 767px) {
+            footer {
+                padding-bottom: 110px !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-cream text-gray-800">
@@ -118,7 +125,7 @@
                 </button>
             </nav>
             <button onclick="openContactModal()" class="md:hidden farm-green p-2 bg-green-50 rounded-full">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l2.28-2.28a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
             </button>
         </div>
     </header>
@@ -209,7 +216,7 @@
                         <span class="bg-farm-green/90 backdrop-blur-md text-white text-[10px] md:text-xs font-bold px-3 py-2 rounded-full shadow-lg border border-white/30 tracking-wider">22444424 | 22033881</span>
                     </div>
                     <div class="img-container">
-                        <img src="https://ik.imagekit.io/reiniszarins/ChatGPT%20Image%20Mar%206,%202026,%2006_35_27%20PM.png?updatedAt=1772814949967" alt="Ceturtdaļa">
+                        <img src="https://ik.imagekit.io/reiniszarins/ChatGPT%20Image%20Mar%2019,%202026,%2009_45_13%20PM.png" alt="Ceturtdaļa">
                     </div>
                     <div class="p-8 flex flex-col flex-grow text-center">
                         <h3 class="text-2xl font-bold mb-2">Ceturtdaļa</h3>
@@ -301,7 +308,16 @@
     <!-- Kājene -->
     <footer class="py-12 px-6 bg-white border-t border-gray-100 text-center opacity-60">
         <div class="text-xl font-bold farm-green mb-2 uppercase tracking-tighter">Ozolu Rukši</div>
-        <p class="text-xs text-gray-500 font-semibold uppercase tracking-widest italic">© 2024 • Dabīga cūkgaļa un liellops no Latvijas laukiem</p>
+        <p class="text-xs text-gray-500 font-semibold uppercase tracking-widest italic mb-1">© 2024 • Dabīga cūkgaļa un liellops no Latvijas laukiem</p>
+        <div class="text-[10px] text-gray-400 font-medium uppercase tracking-widest flex justify-center gap-2 flex-wrap">
+            <span>PVD reģistrācijas nr. 094416</span>
+            <span>|</span>
+            <button onclick="toggleFindUs()" class="hover:text-gray-600 transition-colors">Kā mūs atrast?</button>
+        </div>
+        <!-- Lakonisks, paslēpts teksts -->
+        <p id="findUsText" class="hidden text-[10px] text-gray-400 font-medium uppercase tracking-widest mt-2 animate-in fade-in slide-in-from-top-1 duration-300">
+            Brauciet pa galveno ceļu, precīzas norādes saņemsiet kopā ar pasūtījumu.
+        </p>
     </footer>
 
     <!-- Mobilā ātrā poga -->
@@ -373,6 +389,12 @@
         const modal = document.getElementById('contactModal');
         function openContactModal() { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeContactModal() { modal.classList.remove('active'); document.body.style.overflow = 'auto'; }
+        
+        // Funkcija, lai parādītu/noslēptu "Kā mūs atrast" tekstu
+        function toggleFindUs() {
+            const text = document.getElementById('findUsText');
+            text.classList.toggle('hidden');
+        }
     </script>
 </body>
 </html>
