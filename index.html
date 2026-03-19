@@ -315,8 +315,9 @@
                     <p class="text-gray-600 mb-10 text-lg">Atstājiet savu informāciju, un mēs Jums piezvanīsim, lai saskaņotu labāko piedāvājumu!</p>
 
                     <div id="orderFormContainer">
-                       <!-- Mainīta loģika uz WhatsApp nosūtīšanu -->
-                       <form id="orderForm" onsubmit="handleOrderSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                       <!-- Atjaunota loģika klusai sūtīšanai uz e-pastu -->
+                       <form id="orderForm" onsubmit="handleOrderSubmit(event)" action="https://api.web3forms.com/submit" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <input type="hidden" name="access_key" value="b815f4b8-a9ff-4ba2-ba1d-1fd0a131d22d">   
                          <div class="space-y-4">
                                 <div>
                                     <label class="block text-xs font-bold text-farm-green uppercase tracking-widest mb-2">Jūsu vārds</label>
@@ -352,18 +353,18 @@
 
                             <div class="md:col-span-2 mt-4">
                                 <button type="submit" id="submitBtn" class="w-full bg-farm-green text-white font-bold py-4 rounded-xl hover:bg-green-900 transition shadow-lg uppercase tracking-widest flex items-center justify-center gap-3">
-                                    <span>Pieteikt zvanu</span>
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span id="btnText">Pieteikt zvanu</span>
+                                    <svg id="btnIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                                 </button>
                             </div>
                         </form>
                     </div>
 
-                    <!-- Paldies ziņojums (sākumā paslēpts) -->
+                    <!-- Paldies ziņojums -->
                     <div id="thankYouMessage" class="hidden text-center py-10 animate-in fade-in zoom-in duration-500">
                         <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">🐷</div>
-                        <h3 class="text-2xl font-bold farm-green mb-2">Paldies, pieteikums sagatavots!</h3>
-                        <p class="text-gray-600">Lūdzu, apstipriniet ziņas nosūtīšanu WhatsApp logā, lai saimnieks to saņemtu.</p>
+                        <h3 class="text-2xl font-bold farm-green mb-2">Paldies, pieteikums saņemts!</h3>
+                        <p class="text-gray-600">Saimnieks saņems jūsu ziņu un drīzumā sazināsies.</p>
                         <button onclick="resetForm()" class="mt-8 text-farm-green font-bold underline text-sm uppercase tracking-widest">Nosūtīt vēlreiz</button>
                     </div>
                 </div>
@@ -529,33 +530,62 @@
             }
         };
 
-        function handleOrderSubmit(event) {
+        // Jaunā loģika: Klusa e-pasta sūtīšana fonā
+        async function handleOrderSubmit(event) {
             event.preventDefault();
-            const name = document.getElementById('orderName').value;
-            const phone = document.getElementById('orderPhone').value;
-            const city = document.getElementById('orderCity').value;
-            const product = document.getElementById('orderProduct').value;
+            const form = event.target;
+            const container = document.getElementById('orderFormContainer');
+            const thankYou = document.getElementById('thankYouMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            
+            // Iestata ielādes stāvokli
+            errorMessage.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+            btnText.innerText = "Sūta...";
 
-            const text = `Sveiki! Vēlos pieteikt zvanu no mājaslapas.%0A%0A*Vārds:* ${name}%0A*Telefons:* ${phone}%0A*Vieta:* ${city}%0A*Interese:* ${product}`;
-            const saimniekaNumurs = "37122444424"; 
-            const whatsappUrl = `https://wa.me/${saimniekaNumurs}?text=${text}`;
+            const formData = new FormData(form);
 
-            document.getElementById('orderFormContainer').classList.add('hidden');
-            document.getElementById('thankYouMessage').classList.remove('hidden');
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
 
-            setTimeout(() => {
-                window.open(whatsappUrl, '_blank');
-            }, 500);
+                if (response.ok) {
+                    // Veiksmīgi nosūtīts
+                    container.classList.add('hidden');
+                    thankYou.classList.remove('hidden');
+                } else {
+                    throw new Error('Servera kļūda');
+                }
+            } catch (error) {
+                // Kļūda sūtīšanā
+                errorMessage.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                btnText.innerText = "Pieteikt zvanu";
+            }
         }
 
         function resetForm() {
             const form = document.getElementById('orderForm');
             const container = document.getElementById('orderFormContainer');
             const thankYou = document.getElementById('thankYouMessage');
+            const btnText = document.getElementById('btnText');
+            const submitBtn = document.getElementById('submitBtn');
             
             form.reset();
             container.classList.remove('hidden');
             thankYou.classList.add('hidden');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+            btnText.innerText = "Pieteikt zvanu";
         }
     </script>
 </body>
