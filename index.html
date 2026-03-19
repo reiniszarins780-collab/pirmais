@@ -113,7 +113,6 @@
       box-shadow: 0 0 0 3px rgba(45, 74, 34, 0.1);
     }
 
-    /* Ielādes animācija */
     .btn-loading {
       position: relative;
       color: transparent !important;
@@ -305,7 +304,8 @@
               <input type="hidden" name="access_key" value="b815f4b8-a9ff-4ba2-ba1d-1fd0a131d22d">
               <input type="hidden" name="subject" value="Jauns pieteikums no Ozolu Rukši lapas">
               <input type="hidden" name="from_name" value="Ozolu Rukši mājaslapa">
-              <input type="checkbox" name="botcheck" class="hidden" style="display:none">
+              <!-- Honeypot robots aizsardzībai (slēptais lauks) -->
+              <input type="text" name="honeypot" style="display:none">
 
               <div class="space-y-4">
                 <div>
@@ -354,9 +354,8 @@
             <button onclick="resetForm()" class="mt-8 text-farm-green font-bold underline text-sm uppercase tracking-widest">Nosūtīt vēlreiz</button>
           </div>
 
-          <!-- Kļūdas paziņojums -->
-          <div id="errorMessage" class="hidden text-center py-4 mt-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium">
-            Atvainojiet, radās kļūda. Lūdzu, mēģiniet vēlreiz vai zvaniet mums!
+          <div id="errorMessage" class="hidden text-center py-4 mt-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium border border-red-100">
+            Atvainojiet, radās kļūda. Lūdzu, pārbaudiet datus vai zvaniet mums tieši!
           </div>
         </div>
       </div>
@@ -493,48 +492,39 @@
     const thankYou = document.getElementById('thankYouMessage');
     const errorMsg = document.getElementById('errorMessage');
 
-    // Uzlabota sūtīšanas loģika jaunajām ierīcēm
     orderForm.addEventListener('submit', function(e) {
       e.preventDefault();
       
       submitBtn.classList.add('btn-loading');
       errorMsg.classList.add('hidden');
       
-      // Izmantojam tiešu FormData, nevis JSON, lai izvairītos no CORS blokēšanas Safari
       const formData = new FormData(orderForm);
+      const object = Object.fromEntries(formData);
+      const json = JSON.stringify(object);
 
+      // Sūtām kā JSON, kas ir saderīgāks ar Web3Forms AJAX pieprasījumiem jaunās ierīcēs
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        body: formData,
-        // Noņemam manuālas Content-Type galvenes, lai pārlūks pats iestata pareizo Boundary
         headers: {
+          'Content-Type': 'application/json',
           'Accept': 'application/json'
-        }
+        },
+        body: json
       })
       .then(async (response) => {
-        const result = await response.json();
-        if (response.ok) {
-          // Veiksmīga nosūtīšana
+        let res = await response.json();
+        if (response.status == 200 || res.success) {
           container.classList.add('hidden');
           thankYou.classList.remove('hidden');
           orderForm.reset();
-          // Paziņojam Google Analytics par veiksmīgu konversiju
-          if(typeof gtag === 'function') {
-            gtag('event', 'generate_lead', {
-              'event_category': 'form',
-              'event_label': 'pieteikums'
-            });
-          }
         } else {
-          // Serveris atgrieza kļūdu
+          console.error("Servera atbilde:", res);
           errorMsg.classList.remove('hidden');
-          console.error("Server kļūda:", result);
         }
       })
       .catch(error => {
-        // Tīkla kļūda vai bloķēts pieprasījums
+        console.error("Tīkla kļūda:", error);
         errorMsg.classList.remove('hidden');
-        console.error("Sūtīšanas kļūda:", error);
       })
       .finally(() => {
         submitBtn.classList.remove('btn-loading');
