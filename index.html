@@ -139,25 +139,27 @@
       text-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
 
-    /* Kreatīvā augšup poga */
+    /* Kreatīvā ozola lapas augšup poga */
     #scrollTopBtn {
       opacity: 0;
       visibility: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      transform: translateY(20px);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: scale(0.5) rotate(-15deg);
     }
     #scrollTopBtn.visible {
-      opacity: 1;
+      opacity: 0.6;
       visibility: visible;
-      transform: translateY(0);
+      transform: scale(1) rotate(0deg);
     }
-    .scroll-pulse {
-      animation: gentle-pulse 2s infinite;
+    #scrollTopBtn:hover {
+      opacity: 1;
+      transform: scale(1.1);
     }
-    @keyframes gentle-pulse {
-      0% { box-shadow: 0 0 0 0 rgba(45, 74, 34, 0.4); }
-      70% { box-shadow: 0 0 0 15px rgba(45, 74, 34, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(45, 74, 34, 0); }
+    
+    .leaf-shape {
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      background: rgba(45, 74, 34, 0.8);
+      backdrop-filter: blur(4px);
     }
   </style>
 </head>
@@ -269,7 +271,7 @@
             <span class="bg-farm-green/90 backdrop-blur-md text-white text-[10px] md:text-xs font-bold px-3 py-2 rounded-full shadow-lg border border-white/30 tracking-wider">22444424 | 22033881</span>
           </div>
           <div class="img-container">
-            <img src="https://ik.imagekit.io/reiniszarins/ChatGPT%20Image%20Mar%19,%202026,%2009_45_13%20PM.png" alt="Ceturtdaļa">
+            <img src="https://ik.imagekit.io/reiniszarins/ChatGPT%20Image%20Mar%2019,%202026,%2009_45_13%20PM.png" alt="Ceturtdaļa">
           </div>
           <div class="p-8 flex flex-col flex-grow text-center">
             <h3 class="text-2xl font-bold mb-2">Ceturtdaļa</h3>
@@ -331,7 +333,7 @@
 
               <div class="md:col-span-2 mt-4">
                 <button type="submit" id="submitBtn" class="w-full bg-[#25D366] text-white font-bold py-4 rounded-xl hover:bg-green-600 transition shadow-lg uppercase tracking-widest flex items-center justify-center gap-3">
-                  <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86(0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                   <span>Sūtīt pieteikumu uz WhatsApp</span>
                 </button>
               </div>
@@ -410,10 +412,12 @@
     </button>
   </div>
 
-  <!-- Kreatīvā "Uz augšu" poga -->
-  <button id="scrollTopBtn" onclick="scrollToTop()" class="fixed bottom-28 right-6 md:bottom-10 md:right-10 z-[60] bg-farm-green text-white p-4 rounded-full shadow-2xl hover:bg-green-900 active:scale-90 scroll-pulse flex items-center justify-center group">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 h-6 group-hover:-translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7" />
+  <!-- Kreatīvā Ozola lapas "Uz augšu" poga -->
+  <button id="scrollTopBtn" onclick="scrollToTop()" class="fixed bottom-32 right-4 md:bottom-10 md:right-10 z-[60] leaf-shape text-white p-4 shadow-xl hover:bg-green-900 active:scale-90 flex items-center justify-center group" aria-label="Uz augšu">
+    <!-- Stilīgs Ozola lapas SVG -->
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="group-hover:-translate-y-1 transition-transform">
+        <path d="M12,2C12,2 9,4 7,7C5,10 5,14 7,17C9,20 12,22 12,22C12,22 15,20 17,17C19,14 19,10 17,7C15,4 12,2 12,2ZM12,18C10.9,18 10,17.1 10,16C10,14.9 10.9,14 12,14C13.1,14 14,14.9 14,16C14,17.1 13.1,18 12,18ZM12,12C10.9,12 10,11.1 10,10C10,8.9 10.9,8 12,8C13.1,8 14,8.9 14,10C14,11.1 13.1,12 12,12Z" opacity="0.3"/>
+        <path d="M12,4L12,16M12,4L8,8M12,4L16,8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
     </svg>
   </button>
 
