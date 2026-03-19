@@ -315,7 +315,7 @@
                     <p class="text-gray-600 mb-10 text-lg">Atstājiet savu informāciju, un mēs Jums piezvanīsim, lai saskaņotu labāko piedāvājumu!</p>
 
                     <div id="orderFormContainer">
-                       <!-- Mainīta loģika: Sūtīšana uz Telegram -->
+                       <!-- Mainīta loģika: Sūtīšana uz Telegram fonā -->
                        <form id="orderForm" onsubmit="handleOrderSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <div class="space-y-4">
                                 <div>
@@ -530,10 +530,8 @@
         };
 
         // --- KONFIGURĀCIJA TELEGRAM ---
-        // 1. Izveido botu caur @BotFather un iekopē tokenu šeit:
-        const tgToken = "IEVIETO_SAVU_BOT_TOKEN_ŠEIT"; 
-        // 2. Noskaidro savu Chat ID (piemēram, caur @userinfobot) un ieraksti šeit:
-        const tgChatId = "IEVIETO_SAVU_CHAT_ID_ŠEIT";
+        const tgToken = "8327940531:AAF9QqNvt3Tk0prdBUe2OQBSRsVgRbfdXp8"; 
+        const tgChatId = "216140666"; 
 
         // Jaunā loģika: Pieteikuma nosūtīšana uz Telegram fonā
         async function handleOrderSubmit(event) {
@@ -541,11 +539,13 @@
             
             const submitBtn = document.getElementById('submitBtn');
             const errorMessage = document.getElementById('errorMessage');
+            const btnText = document.getElementById('btnText');
             
             // Iestata ielādes stāvokli
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             errorMessage.classList.add('hidden');
+            btnText.innerText = "Sūta...";
 
             // Iegūst datus no laukiem
             const name = document.getElementById('orderName').value;
@@ -572,6 +572,7 @@
                 errorMessage.classList.remove('hidden');
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnText.innerText = "Pieteikt zvanu";
             }
         }
 
@@ -580,12 +581,14 @@
             const container = document.getElementById('orderFormContainer');
             const thankYou = document.getElementById('thankYouMessage');
             const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
             
             form.reset();
             container.classList.remove('hidden');
             thankYou.classList.add('hidden');
             submitBtn.disabled = false;
             submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btnText.innerText = "Pieteikt zvanu";
         }
     </script>
 </body>
