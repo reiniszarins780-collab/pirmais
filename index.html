@@ -291,27 +291,27 @@
                     <p class="text-gray-600 mb-10 text-lg">Atstājiet savu informāciju, un mēs Jums piezvanīsim, lai saskaņotu labāko piedāvājumu!</p>
 
                     <div id="orderFormContainer">
-                       <form id="orderForm" onsubmit="handleOrderSubmit(event)" action="https://api.web3forms.com/submit" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                         <input type="hidden" name="access_key" value="b815f4b8-a9ff-4ba2-ba1d-1fd0a131d22d">   
+                       <!-- Mainīta loģika uz WhatsApp nosūtīšanu -->
+                       <form id="orderForm" onsubmit="handleOrderSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <div class="space-y-4">
                                 <div>
                                     <label class="block text-xs font-bold text-farm-green uppercase tracking-widest mb-2">Jūsu vārds</label>
-                                   <input type="text" name="name" placeholder="Kā Jūs saukt?" class="order-input" required>
+                                   <input type="text" name="name" id="orderName" placeholder="Kā Jūs saukt?" class="order-input" required>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-farm-green uppercase tracking-widest mb-2">Telefona numurs</label>
-                                    <input type="tel" name="phone" placeholder="2X XX XX XX" class="order-input" required>
+                                    <input type="tel" name="phone" id="orderPhone" placeholder="2X XX XX XX" class="order-input" required>
                                 </div>
                             </div>
 
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-xs font-bold text-farm-green uppercase tracking-widest mb-2">Pilsēta / Pagasts</label>
-                                  <input type="text" name="city" placeholder="Kur piegādāt?" class="order-input" required>
+                                  <input type="text" name="city" id="orderCity" placeholder="Kur piegādāt?" class="order-input" required>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-farm-green uppercase tracking-widest mb-2">Kas Jūs interesē?</label>
-                                    <select name="product" class="order-input appearance-none ...">
+                                    <select name="product" id="orderProduct" class="order-input appearance-none">
                                         <option>Ceturtdaļa</option>
                                         <option>Puscūka</option>
                                         <option>Vesela cūka</option>
@@ -338,8 +338,8 @@
                     <!-- Paldies ziņojums (sākumā paslēpts) -->
                     <div id="thankYouMessage" class="hidden text-center py-10 animate-in fade-in zoom-in duration-500">
                         <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">🐷</div>
-                        <h3 class="text-2xl font-bold farm-green mb-2">Paldies, pieteikums saņemts!</h3>
-                        <p class="text-gray-600">Gaidiet saimnieka zvanu.</p>
+                        <h3 class="text-2xl font-bold farm-green mb-2">Paldies, pieteikums sagatavots!</h3>
+                        <p class="text-gray-600">Lūdzu, apstipriniet ziņas nosūtīšanu WhatsApp logā, lai saimnieks to saņemtu.</p>
                         <button onclick="resetForm()" class="mt-8 text-farm-green font-bold underline text-sm uppercase tracking-widest">Nosūtīt vēlreiz</button>
                     </div>
                 </div>
@@ -477,48 +477,38 @@
         function openContactModal() { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeContactModal() { modal.classList.remove('active'); document.body.style.overflow = 'auto'; }
         
-        // Funkcija, lai parādītu/noslēptu "Kā mūs atrast" tekstu
         function toggleFindUs() {
             const text = document.getElementById('findUsText');
             text.classList.toggle('hidden');
         }
 
-        // Sadaļas pasūtījuma formas loģika
-        async function handleOrderSubmit(event) {
+        // Jaunā loģika: Pieteikuma nosūtīšana caur WhatsApp
+        function handleOrderSubmit(event) {
             event.preventDefault();
-            const form = event.target;
-            const container = document.getElementById('orderFormContainer');
-            const thankYou = document.getElementById('thankYouMessage');
-            const errorMessage = document.getElementById('errorMessage');
-            const submitBtn = document.getElementById('submitBtn');
             
-            // Atiestata kļūdu paziņojumu un pogu
-            errorMessage.classList.add('hidden');
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            // Iegūst datus no laukiem
+            const name = document.getElementById('orderName').value;
+            const phone = document.getElementById('orderPhone').value;
+            const city = document.getElementById('orderCity').value;
+            const product = document.getElementById('orderProduct').value;
 
-            const formData = new FormData(form);
+            // Sagatavo ziņas tekstu (izmantojot %0A jaunu rindiņu vietā)
+            const text = `Sveiki! Vēlos pieteikt zvanu no mājaslapas.%0A%0A*Vārds:* ${name}%0A*Telefons:* ${phone}%0A*Vieta:* ${city}%0A*Interese:* ${product}`;
+            
+            // Galvenais saimnieka numurs
+            const saimniekaNumurs = "37122444424"; 
+            
+            // Izveido WhatsApp saiti
+            const whatsappUrl = `https://wa.me/${saimniekaNumurs}?text=${text}`;
 
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
+            // Parāda "Paldies" paziņojumu mājaslapā
+            document.getElementById('orderFormContainer').classList.add('hidden');
+            document.getElementById('thankYouMessage').classList.remove('hidden');
 
-                if (response.ok) {
-                    container.classList.add('hidden');
-                    thankYou.classList.remove('hidden');
-                } else {
-                    throw new Error('Sūtīšanas kļūda');
-                }
-            } catch (error) {
-                errorMessage.classList.remove('hidden');
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
+            // Atver WhatsApp jaunu cilni pēc neliela brīža, lai klients redz paziņojumu
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 500);
         }
 
         function resetForm() {
