@@ -101,6 +101,21 @@
                 padding-bottom: 110px !important;
             }
         }
+
+        /* Formas elementu stils */
+        .order-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e5e7eb;
+            background-color: white;
+            transition: all 0.3s;
+        }
+        .order-input:focus {
+            outline: none;
+            border-color: #2d4a22;
+            box-shadow: 0 0 0 3px rgba(45, 74, 34, 0.1);
+        }
     </style>
 </head>
 <body class="bg-cream text-gray-800">
@@ -124,7 +139,6 @@
                     Sazināties
                 </button>
             </nav>
-            <!-- Mobilā versija: Vēl lielāka un izteiksmīgāka saziņas poga -->
             <button onclick="openContactModal()" class="md:hidden farm-green p-3.5 bg-green-100 rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-transform">
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"></path>
@@ -263,8 +277,74 @@
         </div>
     </section>
 
+    <!-- Sadaļa: Pasūtījuma pieteikums -->
+    <section id="pasutijums" class="py-20 px-6 bg-white">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-green-50 rounded-[3rem] p-8 md:p-16 border border-green-100 shadow-xl relative overflow-hidden">
+                <!-- Dekoratīvs elements -->
+                <div class="absolute top-0 right-0 p-8 opacity-10 hidden md:block">
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </div>
+
+                <div class="relative z-10">
+                    <h2 class="text-3xl md:text-4xl farm-green mb-4 font-bold uppercase tracking-tight">Saimnieka pierakstu grāmata</h2>
+                    <p class="text-gray-600 mb-10 text-lg">Atstājiet savu informāciju, un mēs Jums piezvanīsim, lai saskaņotu labāko piedāvājumu!</p>
+
+                    <div id="orderFormContainer">
+                       <form id="orderForm" action="https://api.web3forms.com/submit" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <input type="hidden" name="access_key" value="b815f4b8-a9ff-4ba2-ba1d-1fd0a131d22d">   
+                         <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-farm-green uppercase tracking-widest mb-2">Jūsu vārds</label>
+                                    <input type="text" placeholder="Kā Jūs saukt?" class="order-input" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-farm-green uppercase tracking-widest mb-2">Telefona numurs</label>
+                                    <input type="tel" placeholder="2X XX XX XX" class="order-input" required>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-farm-green uppercase tracking-widest mb-2">Pilsēta / Pagasts</label>
+                                    <input type="text" placeholder="Kur piegādāt?" class="order-input" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-farm-green uppercase tracking-widest mb-2">Kas Jūs interesē?</label>
+                                    <select class="order-input appearance-none bg-no-repeat bg-[right_1rem_center]" style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%232d4a22%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E');">
+                                        <option>Ceturtdaļa</option>
+                                        <option>Puscūka</option>
+                                        <option>Vesela cūka</option>
+                                        <option>BIO Liellops</option>
+                                        <option>Subprodukti</option>
+                                        <option>Cits jautājums</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-2 mt-4">
+                                <button type="submit" class="w-full bg-farm-green text-white font-bold py-4 rounded-xl hover:bg-green-900 transition shadow-lg uppercase tracking-widest flex items-center justify-center gap-3">
+                                    <span>Pieteikt zvanu</span>
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Paldies ziņojums (sākumā paslēpts) -->
+                    <div id="thankYouMessage" class="hidden text-center py-10 animate-in fade-in zoom-in duration-500">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">🐷</div>
+                        <h3 class="text-2xl font-bold farm-green mb-2">Paldies, pieteikums saņemts!</h3>
+                        <p class="text-gray-600">Gaidiet saimnieka zvanu.</p>
+                        <button onclick="resetForm()" class="mt-8 text-farm-green font-bold underline text-sm uppercase tracking-widest">Nosūtīt vēlreiz</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Par mums -->
-    <section id="par-mums" class="py-24 px-6 bg-white overflow-hidden">
+    <section id="par-mums" class="py-24 px-6 bg-white overflow-hidden border-t border-gray-50">
         <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div class="relative">
                 <div class="aspect-video lg:aspect-square bg-gray-100 rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100">
@@ -397,6 +477,27 @@
         function toggleFindUs() {
             const text = document.getElementById('findUsText');
             text.classList.toggle('hidden');
+        }
+
+        // Sadaļas pasūtījuma formas loģika
+        function handleOrderSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('orderForm');
+            const container = document.getElementById('orderFormContainer');
+            const thankYou = document.getElementById('thankYouMessage');
+            
+            container.classList.add('hidden');
+            thankYou.classList.remove('hidden');
+        }
+
+        function resetForm() {
+            const form = document.getElementById('orderForm');
+            const container = document.getElementById('orderFormContainer');
+            const thankYou = document.getElementById('thankYouMessage');
+            
+            form.reset();
+            container.classList.remove('hidden');
+            thankYou.classList.add('hidden');
         }
     </script>
 </body>
