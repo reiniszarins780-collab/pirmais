@@ -112,6 +112,29 @@
       border-color: #2d4a22;
       box-shadow: 0 0 0 3px rgba(45, 74, 34, 0.1);
     }
+
+    /* Loading state animation */
+    .btn-loading {
+      position: relative;
+      color: transparent !important;
+      pointer-events: none;
+    }
+    .btn-loading::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 50%;
+      left: 50%;
+      margin: -10px 0 0 -10px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body class="bg-cream text-gray-800">
@@ -278,7 +301,7 @@
           <p class="text-gray-600 mb-10 text-lg">Atstājiet savu informāciju, un mēs Jums piezvanīsim, lai saskaņotu labāko piedāvājumu!</p>
 
           <div id="orderFormContainer">
-            <form id="orderForm" action="https://api.web3forms.com/submit" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form id="orderForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <input type="hidden" name="access_key" value="b815f4b8-a9ff-4ba2-ba1d-1fd0a131d22d">
               <input type="hidden" name="subject" value="Jauns pieteikums no Ozolu Rukši lapas">
               <input type="hidden" name="from_name" value="Ozolu Rukši mājaslapa">
@@ -314,9 +337,9 @@
               </div>
 
               <div class="md:col-span-2 mt-4">
-                <button type="submit" class="w-full bg-farm-green text-white font-bold py-4 rounded-xl hover:bg-green-900 transition shadow-lg uppercase tracking-widest flex items-center justify-center gap-3">
-                  <span>Pieteikt zvanu</span>
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button type="submit" id="submitBtn" class="w-full bg-farm-green text-white font-bold py-4 rounded-xl hover:bg-green-900 transition shadow-lg uppercase tracking-widest flex items-center justify-center gap-3">
+                  <span id="btnText">Pieteikt zvanu</span>
+                  <svg id="btnIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
                   </svg>
                 </button>
@@ -329,6 +352,11 @@
             <h3 class="text-2xl font-bold farm-green mb-2">Paldies, pieteikums saņemts!</h3>
             <p class="text-gray-600">Gaidiet saimnieka zvanu.</p>
             <button onclick="resetForm()" class="mt-8 text-farm-green font-bold underline text-sm uppercase tracking-widest">Nosūtīt vēlreiz</button>
+          </div>
+
+          <!-- Error message if fails -->
+          <div id="errorMessage" class="hidden text-center py-4 mt-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium">
+            Atvainojiet, radās kļūda. Lūdzu, mēģiniet vēlreiz vai zvaniet mums!
           </div>
         </div>
       </div>
@@ -459,6 +487,54 @@
 
   <script>
     const modal = document.getElementById('contactModal');
+    const orderForm = document.getElementById('orderForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const container = document.getElementById('orderFormContainer');
+    const thankYou = document.getElementById('thankYouMessage');
+    const errorMsg = document.getElementById('errorMessage');
+
+    // Uzlabota formas sūtīšana, kas strādā visās ierīcēs
+    orderForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Vizuāls loading stāvoklis
+      submitBtn.classList.add('btn-loading');
+      errorMsg.classList.add('hidden');
+      
+      const formData = new FormData(orderForm);
+      const object = Object.fromEntries(formData);
+      const json = JSON.stringify(object);
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: json
+      })
+      .then(async (response) => {
+        let json = await response.json();
+        if (response.status == 200) {
+          // Veiksmīga nosūtīšana
+          container.classList.add('hidden');
+          thankYou.classList.remove('hidden');
+          orderForm.reset();
+        } else {
+          // Kļūda no servera
+          console.log(response);
+          errorMsg.classList.remove('hidden');
+        }
+      })
+      .catch(error => {
+        // Tīkla kļūda
+        console.log(error);
+        errorMsg.classList.remove('hidden');
+      })
+      .finally(() => {
+        submitBtn.classList.remove('btn-loading');
+      });
+    });
 
     function openContactModal() {
       modal.classList.add('active');
@@ -476,13 +552,9 @@
     }
 
     function resetForm() {
-      const form = document.getElementById('orderForm');
-      const container = document.getElementById('orderFormContainer');
-      const thankYou = document.getElementById('thankYouMessage');
-
-      form.reset();
       container.classList.remove('hidden');
       thankYou.classList.add('hidden');
+      errorMsg.classList.add('hidden');
     }
   </script>
 </body>
