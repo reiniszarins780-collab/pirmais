@@ -113,7 +113,7 @@
       box-shadow: 0 0 0 3px rgba(45, 74, 34, 0.1);
     }
 
-    /* Loading state animation */
+    /* Ielādes animācija */
     .btn-loading {
       position: relative;
       color: transparent !important;
@@ -354,7 +354,7 @@
             <button onclick="resetForm()" class="mt-8 text-farm-green font-bold underline text-sm uppercase tracking-widest">Nosūtīt vēlreiz</button>
           </div>
 
-          <!-- Error message if fails -->
+          <!-- Kļūdas paziņojums -->
           <div id="errorMessage" class="hidden text-center py-4 mt-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium">
             Atvainojiet, radās kļūda. Lūdzu, mēģiniet vēlreiz vai zvaniet mums!
           </div>
@@ -493,43 +493,48 @@
     const thankYou = document.getElementById('thankYouMessage');
     const errorMsg = document.getElementById('errorMessage');
 
-    // Uzlabota formas sūtīšana, kas strādā visās ierīcēs
+    // Uzlabota sūtīšanas loģika jaunajām ierīcēm
     orderForm.addEventListener('submit', function(e) {
       e.preventDefault();
       
-      // Vizuāls loading stāvoklis
       submitBtn.classList.add('btn-loading');
       errorMsg.classList.add('hidden');
       
+      // Izmantojam tiešu FormData, nevis JSON, lai izvairītos no CORS blokēšanas Safari
       const formData = new FormData(orderForm);
-      const object = Object.fromEntries(formData);
-      const json = JSON.stringify(object);
 
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
+        body: formData,
+        // Noņemam manuālas Content-Type galvenes, lai pārlūks pats iestata pareizo Boundary
         headers: {
-          'Content-Type': 'application/json',
           'Accept': 'application/json'
-        },
-        body: json
+        }
       })
       .then(async (response) => {
-        let json = await response.json();
-        if (response.status == 200) {
+        const result = await response.json();
+        if (response.ok) {
           // Veiksmīga nosūtīšana
           container.classList.add('hidden');
           thankYou.classList.remove('hidden');
           orderForm.reset();
+          // Paziņojam Google Analytics par veiksmīgu konversiju
+          if(typeof gtag === 'function') {
+            gtag('event', 'generate_lead', {
+              'event_category': 'form',
+              'event_label': 'pieteikums'
+            });
+          }
         } else {
-          // Kļūda no servera
-          console.log(response);
+          // Serveris atgrieza kļūdu
           errorMsg.classList.remove('hidden');
+          console.error("Server kļūda:", result);
         }
       })
       .catch(error => {
-        // Tīkla kļūda
-        console.log(error);
+        // Tīkla kļūda vai bloķēts pieprasījums
         errorMsg.classList.remove('hidden');
+        console.error("Sūtīšanas kļūda:", error);
       })
       .finally(() => {
         submitBtn.classList.remove('btn-loading');
