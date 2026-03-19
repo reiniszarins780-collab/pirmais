@@ -134,6 +134,11 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
+    /* Papildu uzlabojums Hero tekstam */
+    .hero-shadow {
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
   </style>
 </head>
 <body class="bg-cream text-gray-800">
@@ -166,26 +171,26 @@
   </header>
 
   <!-- Hero -->
-  <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-gray-900 py-24">
+  <section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gray-900 py-20">
     <div class="absolute inset-0 z-0">
       <img src="https://ik.imagekit.io/reiniszarins/ChatGPT%20Image%20Mar%206,%202026,%2005_56_10%20PM.png" alt="Saimniecības fons" class="w-full h-full object-cover opacity-50">
     </div>
-    <div class="relative z-10 text-center px-6 max-w-5xl">
-      <span class="inline-block bg-white/10 backdrop-blur-md text-white px-4 py-1 rounded-full text-sm font-semibold mb-6 tracking-widest uppercase border border-white/20">Svaigums no saimnieka</span>
-      <h1 class="text-4xl md:text-7xl text-white mb-6 leading-[1.1] drop-shadow-2xl">
+    <div class="relative z-10 text-center px-6 max-w-4xl">
+      <span class="inline-block bg-white/10 backdrop-blur-md text-white px-5 py-1.5 rounded-full text-sm font-semibold mb-8 tracking-widest uppercase border border-white/20">Svaigums no saimnieka</span>
+      <h1 class="text-4xl md:text-7xl text-white mb-8 leading-[1.1] hero-shadow font-bold">
         Īsta cūkgaļa tieši no Latvijas saimniecības
       </h1>
-      <p class="text-lg md:text-2xl text-gray-100 mb-10 font-light max-w-2xl mx-auto">
+      <p class="text-lg md:text-2xl text-gray-100 mb-12 font-light max-w-2xl mx-auto leading-relaxed opacity-90">
         No kūts līdz Jūsu virtuvei. Dabīga garša, godīgs svars un izdevīga zemnieka cena.
       </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#piedavajums" class="bg-white text-gray-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition shadow-2xl">
+      <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
+        <a href="#piedavajums" class="w-full sm:w-auto bg-white text-gray-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition shadow-2xl">
           Skatīt piedāvājumu
         </a>
-        <button onclick="openContactModal()" class="bg-[#25D366] text-white px-10 py-4 rounded-xl font-bold text-lg hover:opacity-95 transition flex items-center justify-center shadow-2xl">
+        <a href="https://wa.me/37122444424" class="w-full sm:w-auto bg-[#25D366] text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-green-600 transition flex items-center justify-center shadow-2xl">
           <svg class="w-6 h-6 mr-3 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           WhatsApp
-        </button>
+        </a>
       </div>
     </div>
   </section>
@@ -244,7 +249,7 @@
             <span class="bg-farm-green/90 backdrop-blur-md text-white text-[10px] md:text-xs font-bold px-3 py-2 rounded-full shadow-lg border border-white/30 tracking-wider">22444424 | 22033881</span>
           </div>
           <div class="img-container">
-            <img src="https://ik.imagekit.io/reiniszarins/ChatGPT%20Image%20Mar%2019,%202026,%2009_45_13%20PM.png" alt="Ceturtdaļa">
+            <img src="https://ik.imagekit.io/reiniszarins/ChatGPT%20Image%20Mar%19,%202026,%2009_45_13%20PM.png" alt="Ceturtdaļa">
           </div>
           <div class="p-8 flex flex-col flex-grow text-center">
             <h3 class="text-2xl font-bold mb-2">Ceturtdaļa</h3>
@@ -268,8 +273,8 @@
         </div>
 
         <div class="relative z-10">
-          <h2 class="text-3xl md:text-4xl farm-green mb-4 font-bold uppercase tracking-tight">Saimnieka pierakstu grāmata</h2>
-          <p class="text-gray-600 mb-10 text-lg">Aizpildiet formu un dati tiks nosūtīti mums uz WhatsApp!</p>
+          <h2 class="text-3xl md:text-4xl farm-green mb-4 font-bold uppercase tracking-tight text-center sm:text-left">Saimnieka pierakstu grāmata</h2>
+          <p class="text-gray-600 mb-10 text-lg text-center sm:text-left">Aizpildiet formu un dati tiks nosūtīti mums uz WhatsApp!</p>
 
           <div id="orderFormContainer">
             <form id="orderForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -307,7 +312,7 @@
               <div class="md:col-span-2 mt-4">
                 <button type="submit" id="submitBtn" class="w-full bg-[#25D366] text-white font-bold py-4 rounded-xl hover:bg-green-600 transition shadow-lg uppercase tracking-widest flex items-center justify-center gap-3">
                   <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                  <span>Sūtīt uz WhatsApp</span>
+                  <span>Sūtīt pieteikumu uz WhatsApp</span>
                 </button>
               </div>
             </form>
@@ -316,7 +321,7 @@
           <div id="thankYouMessage" class="hidden text-center py-10">
             <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">🐷</div>
             <h3 class="text-2xl font-bold farm-green mb-2">Paldies!</h3>
-            <p class="text-gray-600">Jūsu pieteikums ir sagatavots. Gaidiet zvanu!</p>
+            <p class="text-gray-600">Jūsu pieteikums ir sagatavots. Gaidiet mūsu zvanu vai ziņu!</p>
             <button onclick="resetForm()" class="mt-8 text-farm-green font-bold underline text-sm uppercase tracking-widest">Nosūtīt vēlreiz</button>
           </div>
         </div>
@@ -438,29 +443,25 @@
       const city = document.getElementById('formCity').value;
       const product = document.getElementById('formProduct').value;
 
-      // Sagatavojam ziņu
-      const waMessage = `Sveiki! Mans pieteikums no mājaslapas:%0A%0A👤 *Vārds:* ${name}%0A📞 *Telefons:* ${phone}%0A📍 *Vieta:* ${city}%0A🥩 *Interesē:* ${product}`;
-      
-      // Tavs telefona numurs
-      const saimniekaNumurs = "37122444424"; 
-      const waUrl = `https://wa.me/${saimniekaNumurs}?text=${waMessage}`;
+      // Izveidojam tīru ziņu, izmantojot encodeURIComponent, lai izvairītos no kļūdām datorā
+      const waText = `Sveiki! Mans pieteikums no mājaslapas:\n\n👤 Vārds: ${name}\n📞 Telefons: ${phone}\n📍 Vieta: ${city}\n🥩 Interesē: ${product}`;
+      const waUrl = `https://wa.me/37122444424?text=${encodeURIComponent(waText)}`;
 
-      // 1. UZREIZ parādām "Paldies" ziņu lapā
+      // 1. Vispirms nomainām vizuālo stāvokli
       container.classList.add('hidden');
       thankYou.classList.remove('hidden');
       
-      // 2. Fonā aizsūtām e-pastu kā rezervi (ja nu kas)
+      // 2. Rezerves e-pasts (ja nepieciešams)
       const formData = new FormData(orderForm);
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         body: formData
       });
 
-      // 3. Atveram WhatsApp pēc maza brītiņa (500ms), lai lietotājs redz, ka lapa nomainījās
+      // 3. Pārejam uz WhatsApp
       setTimeout(() => {
-        // Izmantojam window.location.href nevis window.open, lai izvairītos no baltām lapām/cilnēm mobilajā telefonā
         window.location.href = waUrl;
-      }, 500);
+      }, 300);
 
       orderForm.reset();
     });
