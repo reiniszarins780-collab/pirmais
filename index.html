@@ -291,7 +291,7 @@
                     <p class="text-gray-600 mb-10 text-lg">Atstājiet savu informāciju, un mēs Jums piezvanīsim, lai saskaņotu labāko piedāvājumu!</p>
 
                     <div id="orderFormContainer">
-                       <form id="orderForm" action="https://api.web3forms.com/submit" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                       <form id="orderForm" onsubmit="handleOrderSubmit(event)" action="https://api.web3forms.com/submit" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <input type="hidden" name="access_key" value="b815f4b8-a9ff-4ba2-ba1d-1fd0a131d22d">   
                          <div class="space-y-4">
                                 <div>
@@ -322,8 +322,12 @@
                                 </div>
                             </div>
 
+                            <div id="errorMessage" class="hidden md:col-span-2 text-center text-red-600 font-bold text-sm bg-red-50 p-3 rounded-xl border border-red-100">
+                                Kaut kas nesanāca. Lūdzu, mēģiniet vēlreiz vai zvaniet mums!
+                            </div>
+
                             <div class="md:col-span-2 mt-4">
-                                <button type="submit" class="w-full bg-farm-green text-white font-bold py-4 rounded-xl hover:bg-green-900 transition shadow-lg uppercase tracking-widest flex items-center justify-center gap-3">
+                                <button type="submit" id="submitBtn" class="w-full bg-farm-green text-white font-bold py-4 rounded-xl hover:bg-green-900 transition shadow-lg uppercase tracking-widest flex items-center justify-center gap-3">
                                     <span>Pieteikt zvanu</span>
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                                 </button>
@@ -480,14 +484,41 @@
         }
 
         // Sadaļas pasūtījuma formas loģika
-        function handleOrderSubmit(event) {
+        async function handleOrderSubmit(event) {
             event.preventDefault();
-            const form = document.getElementById('orderForm');
+            const form = event.target;
             const container = document.getElementById('orderFormContainer');
             const thankYou = document.getElementById('thankYouMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const submitBtn = document.getElementById('submitBtn');
             
-            container.classList.add('hidden');
-            thankYou.classList.remove('hidden');
+            // Atiestata kļūdu paziņojumu un pogu
+            errorMessage.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    container.classList.add('hidden');
+                    thankYou.classList.remove('hidden');
+                } else {
+                    throw new Error('Sūtīšanas kļūda');
+                }
+            } catch (error) {
+                errorMessage.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
         }
 
         function resetForm() {
