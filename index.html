@@ -116,6 +116,30 @@
             border-color: #2d4a22;
             box-shadow: 0 0 0 3px rgba(45, 74, 34, 0.1);
         }
+
+        /* Atpakaļ uz augšu poga */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        #backToTop.show {
+            opacity: 0.4; /* Caursīdīga, lai netraucē burtus */
+            visibility: visible;
+        }
+        #backToTop:hover {
+            opacity: 1;
+            transform: translateY(-3px);
+        }
+        @media (max-width: 767px) {
+            #backToTop {
+                bottom: 90px; /* Pacelta virs mobilās CTA pogas */
+            }
+        }
     </style>
 </head>
 <body class="bg-cream text-gray-800">
@@ -472,8 +496,17 @@
         </div>
     </div>
 
+    <!-- Atpakaļ uz augšu poga -->
+    <button id="backToTop" onclick="scrollToTop()" class="bg-gray-400 text-white p-3 rounded-full shadow-lg flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
     <script>
         const modal = document.getElementById('contactModal');
+        const bttBtn = document.getElementById('backToTop');
+
         function openContactModal() { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeContactModal() { modal.classList.remove('active'); document.body.style.overflow = 'auto'; }
         
@@ -482,30 +515,34 @@
             text.classList.toggle('hidden');
         }
 
-        // Jaunā loģika: Pieteikuma nosūtīšana caur WhatsApp
+        // Uz augšu funkcija
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // Pogas redzamība skrollējot
+        window.onscroll = function() {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                bttBtn.classList.add('show');
+            } else {
+                bttBtn.classList.remove('show');
+            }
+        };
+
         function handleOrderSubmit(event) {
             event.preventDefault();
-            
-            // Iegūst datus no laukiem
             const name = document.getElementById('orderName').value;
             const phone = document.getElementById('orderPhone').value;
             const city = document.getElementById('orderCity').value;
             const product = document.getElementById('orderProduct').value;
 
-            // Sagatavo ziņas tekstu (izmantojot %0A jaunu rindiņu vietā)
             const text = `Sveiki! Vēlos pieteikt zvanu no mājaslapas.%0A%0A*Vārds:* ${name}%0A*Telefons:* ${phone}%0A*Vieta:* ${city}%0A*Interese:* ${product}`;
-            
-            // Galvenais saimnieka numurs
             const saimniekaNumurs = "37122444424"; 
-            
-            // Izveido WhatsApp saiti
             const whatsappUrl = `https://wa.me/${saimniekaNumurs}?text=${text}`;
 
-            // Parāda "Paldies" paziņojumu mājaslapā
             document.getElementById('orderFormContainer').classList.add('hidden');
             document.getElementById('thankYouMessage').classList.remove('hidden');
 
-            // Atver WhatsApp jaunu cilni pēc neliela brīža, lai klients redz paziņojumu
             setTimeout(() => {
                 window.open(whatsappUrl, '_blank');
             }, 500);
