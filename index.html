@@ -530,7 +530,7 @@
         };
 
         // --- KONFIGURĀCIJA TELEGRAM ---
-        const tgToken = "8327940531:AAEsQGE088FExKjNxCK7F0d8M8MkQ4J4Wn4"; 
+  
         const tgChatId = "216140666"; 
 
         // Jaunā loģika: Pieteikuma nosūtīšana uz Telegram fonā
@@ -556,10 +556,18 @@
             // Sagatavo ziņas tekstu Telegram formatējumā
             const text = `🐷 *Jauns pieteikums no mājaslapas!*%0A%0A👤 *Vārds:* ${name}%0A📞 *Telefons:* ${phone}%0A📍 *Vieta:* ${city}%0A🥩 *Interese:* ${product}`;
             
-            const url = `https://api.telegram.org/bot${tgToken}/sendMessage?chat_id=${tgChatId}&text=${text}&parse_mode=Markdown`;
-
+const url = "https://hook.eu1.make.com/g1ud9sfs29i43sk6qxs11oc41syn82rf";
             try {
-                const response = await fetch(url);
+            const response = await fetch(url, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    name: name,
+    phone: phone
+  })
+});
                 if (response.ok) {
                     // Parāda "Paldies" paziņojumu mājaslapā
                     document.getElementById('orderFormContainer').classList.add('hidden');
